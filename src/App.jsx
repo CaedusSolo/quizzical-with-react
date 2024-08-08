@@ -62,7 +62,7 @@ function App() {
     <main className="main--container">
       {quizStarted ? 
       quizItems.map(item => {
-        return <Question questionText={item.question} />
+        return <Question questionText={item.question} answerOptions={item.answerOptions} />
       })
       : (
         <StartPage toggleQuizStarted={toggleQuizStarted} />
