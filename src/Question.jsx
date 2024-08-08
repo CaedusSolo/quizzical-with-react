@@ -1,11 +1,11 @@
 import './App.css' 
 
-export default function Question() {
+export default function Question(props) {
     return (
         <section className="questions--container">
         <div className="question--container">
             <h2 className="quiz-question">
-            Which is the correct Chinese character for 'he'?
+            {props.questionText}
             </h2>
             <div className="quiz-answers--container">
                 <button className="answer--btn">我</button>
