@@ -2,70 +2,99 @@ import "./App.css";
 import StartPage from "./components/StartPage";
 import React, { useState, createContext, useEffect } from "react";
 import QuizPage from "./components/QuizPage";
-import he from "he"
+import he from "he";
 // {response_code: 0, results: Array(5)}
 // [{}, {}, {}, {}, {}]
 // {'category', 'type', 'difficulty', 'question', 'correct_answer', 'incorrect_answers' : []}
 
-
 export const AppContext = createContext();
-//  api url: https://opentdb.com/api.php?amount=5&token=eed9b9209d969b9aeef2d44806f704049d97d88be10a969b8a5f9a14cbcff479
-
-
 
 function App() {
   const [quizStarted, setQuizStarted] = useState(false);
-  const [quizData, setQuizData] = useState([])
+  const [quizData, setQuizData] = useState([]);
+  let quizContent;
 
-  const quizContent = [
-    {
-      "question" : "What team is LeBron James playing for?",
-      "correct_answer" : "LA Lakers",
-      'incorrect_answers' : [
-        "Cleveland Cavaliers",
-        "Miami Heat",
-        'Chicago Bulls'
-      ]
-    },
-    {
-      "question" : "What team is LeBron James playing for?",
-      "correct_answer" : "LA Lakers",
-      'incorrect_answers' : [
-        "Cleveland Cavaliers",
-        "Miami Heat",
-        'Chicago Bulls'
-      ]
-    },
-    {
-      "question" : "What team is LeBron James playing for?",
-      "correct_answer" : "LA Lakers",
-      'incorrect_answers' : [
-        "Cleveland Cavaliers",
-        "Miami Heat",
-        'Chicago Bulls'
-      ]
+  // const quizContent = [
+  //   {
+  //     "question" : "What team is LeBron James playing for?",
+  //     "correct_answer" : "LA Lakers",
+  //     'incorrect_answers' : [
+  //       "Cleveland Cavaliers",
+  //       "Miami Heat",
+  //       'Chicago Bulls'
+  //     ]
+  //   },
+  //   {
+  //     "question" : "What team is LeBron James playing for?",
+  //     "correct_answer" : "LA Lakers",
+  //     'incorrect_answers' : [
+  //       "Cleveland Cavaliers",
+  //       "Miami Heat",
+  //       'Chicago Bulls'
+  //     ]
+  //   },
+  //   {
+  //     "question" : "What team is LeBron James playing for?",
+  //     "correct_answer" : "LA Lakers",
+  //     'incorrect_answers' : [
+  //       "Cleveland Cavaliers",
+  //       "Miami Heat",
+  //       'Chicago Bulls'
+  //     ]
+  //   }
+  // ]
+
+  async function fetchQuestions() {
+    let sessionToken;
+
+    try {
+      const tokenResponse = await fetch(
+        "https://opentdb.com/api_token.php?command=request"
+      );
+      const tokenData = await tokenResponse.json();
+      sessionToken = tokenData.token;
+
+      const questionsResponse = await fetch(
+        `https://opentdb.com/api.php?amount=5&token=${sessionToken}`
+      );
+      const questionsData = await questionsResponse.json();
+
+      const decodedQuizContent = questionsData.results.map((result) => {
+        return {
+          question: he.decode(result.question),
+          correct_answer: he.decode(result.correct_answer),
+          incorrect_answers: result.incorrect_answers.map((item) => {
+            return he.decode(item);
+          }),
+        };
+      });
+
+      // Set the decoded quiz data
+      setQuizData(decodedQuizContent);
+    } catch (error) {
+      console.error("Failed to fetch quiz questions", error);
     }
-  ]
+  }
 
   useEffect(() => {
-    setQuizData(quizContent)
-  },[quizStarted])
-
+    if (quizStarted) {
+      fetchQuestions();
+    }
+  }, [quizStarted]);
 
   function onStartBtnClick() {
     setQuizStarted((prevState) => !prevState);
   }
-
 
   return (
     <>
       <AppContext.Provider
         value={{
           onStartBtnClick,
-          quizData
+          quizData,
         }}
       >
-        <QuizPage />
+        {quizStarted ? <QuizPage /> : <StartPage />}
       </AppContext.Provider>
     </>
   );

@@ -30,6 +30,7 @@ function QuizPage() {
   return (
     <div className='quizPage'>
       {mapQuizData()}
+      <button className='check-btn'>Check Answers</button>
     </div>
   )
 }

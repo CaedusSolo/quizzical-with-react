@@ -1,12 +1,16 @@
-import React from 'react'
+import React from "react";
+import QuizQuestion from "./QuizQuestion";
+import QuizOption from "./QuizOption";
 
 function QuizItem(props) {
   return (
-    <div className='quizItem'>
-        <h1>{props.question}</h1>
-        <h4>{props.options}</h4>
+    <div className="quizItem">
+      <QuizQuestion question={props.question} />
+      {props.options.map((option, index) => (
+        <QuizOption index={index} option={option} />
+      ))}
     </div>
-  )
+  );
 }
 
-export default QuizItem
+export default QuizItem;
