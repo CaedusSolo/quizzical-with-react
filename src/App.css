@@ -11,8 +11,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  padding: 1em 0;
+  min-height: 100vh;
 }
 
 .btn {
@@ -27,7 +26,7 @@
   justify-content: center;
   gap: 3em;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   user-select: none;
   background-image: linear-gradient(to right top, #d4d6c2, #d9dbc9, #dfe0d1, #e4e6d8, #eaebe0);
 }
@@ -69,13 +68,14 @@
 }
 
 .quizPage {
-  padding: 0 0.5em;
+  padding: 0.75em;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1em;
   min-height: 100vh;
+  width: 100%;
   background-image: linear-gradient(to right top, #d4d6c2, #d9dbc9, #dfe0d1, #e4e6d8, #eaebe0);
 }
 
@@ -85,7 +85,7 @@
 }
 
 input[type = "radio"] {
-  opacity: 0;
+  opacity: 1;
   position: absolute;
 }
 
@@ -95,7 +95,7 @@ input[type = "radio"] {
   text-align: center;
   border-radius: 8px;
   padding: 0.25em 0.5em;
-  margin: 0.25em 0.5em ;
+  margin: 0.25em 0.5em;
 }
 
 .radio label {
@@ -105,8 +105,15 @@ input[type = "radio"] {
   cursor: pointer;
 }
 
+.radio:hover,
+.radio:hover {
+  background-color: green;
+  cursor: pointer;
+}
+
 .check-btn {
   margin-top: 1em;
+  margin-bottom: 1em;
   padding: 0.75em;
   border-radius: 8px;
   border: none;
@@ -114,7 +121,7 @@ input[type = "radio"] {
   font-weight: 500;
   color: gainsboro;
   letter-spacing: 1.1px;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   text-align: center;
 }
 

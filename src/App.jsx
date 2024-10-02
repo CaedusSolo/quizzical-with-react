@@ -3,6 +3,7 @@ import StartPage from "./components/StartPage";
 import React, { useState, createContext, useEffect } from "react";
 import QuizPage from "./components/QuizPage";
 import he from "he";
+import { nanoid } from "nanoid"
 // {response_code: 0, results: Array(5)}
 // [{}, {}, {}, {}, {}]
 // {'category', 'type', 'difficulty', 'question', 'correct_answer', 'incorrect_answers' : []}
@@ -66,6 +67,7 @@ function App() {
           incorrect_answers: result.incorrect_answers.map((item) => {
             return he.decode(item);
           }),
+          id: nanoid()
         };
       });
 

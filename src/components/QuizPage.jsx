@@ -23,6 +23,7 @@ function QuizPage() {
       question={item.question}
       answer={item.correct_answer}
       options={options}
+      id={item.id}
       />
     })
   }
