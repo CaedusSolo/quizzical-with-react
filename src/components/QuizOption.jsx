@@ -2,21 +2,31 @@ import React, { useState, useContext } from "react";
 import { AppContext } from "../App";
 
 function QuizOption(props) {
-
-  const {updateSelectedOptions} = useContext(AppContext)
-  const [isChecked, setIsChecked] = useState(false)
+  const { updateSelectedOptions, selectedOptions, quizResults } = useContext(AppContext);
 
   function handleChange() {
-    setIsChecked(prevState => !prevState)
-    updateSelectedOptions(props.questionId, props.index)
+    updateSelectedOptions(props.questionId, props.index);
   }
 
+  function optionIsSelected() {
+    return selectedOptions.some(
+      (option) =>
+        option.questionId === props.questionId &&
+        option.selectedOptionIndex === props.index
+    );
+  }
+
+  const checkedStyle = {
+    backgroundColor: optionIsSelected() && "#B77DFF",
+    fontWeight: optionIsSelected() && "bold"
+  };
+
   return (
-    <div className="radio">
+    <div className="radio" style={checkedStyle}>
       <input
         type="radio"
-        name={`option-${props.questionId}`} // Make name unique by including questionId
-        id={`option-${props.questionId}-${props.index}`} 
+        name={`option-${props.questionId}`} // Unique name per question
+        id={`option-${props.questionId}-${props.index}`}
         onChange={handleChange}
       />
       <label htmlFor={`option-${props.questionId}-${props.index}`}>

@@ -4,9 +4,7 @@ import React, { useState, createContext, useEffect } from "react";
 import QuizPage from "./components/QuizPage";
 import he from "he";
 import { nanoid } from "nanoid";
-// {response_code: 0, results: Array(5)}
-// [{}, {}, {}, {}, {}]
-// {'category', 'type', 'difficulty', 'question', 'correct_answer', 'incorrect_answers' : []}
+
 
 export const AppContext = createContext();
 
@@ -14,6 +12,8 @@ function App() {
   const [quizStarted, setQuizStarted] = useState(false);
   const [quizData, setQuizData] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [quizResults, setQuizResults] = useState(null)
+
 
   const shuffleArr = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
@@ -39,14 +39,20 @@ function App() {
       const questionsData = await questionsResponse.json();
 
       const decodedQuizContent = questionsData.results.map((result) => {
+        const decodedCorrectAnswer = he.decode(result.correct_answer)
+        const decodedIncorrectAnswers  = result.incorrect_answers.map((item) => {
+          return he.decode(item);
+        });
+
         return {
           question: he.decode(result.question),
-          correct_answer: he.decode(result.correct_answer),
-          incorrect_answers: result.incorrect_answers.map((item) => {
-            return he.decode(item);
-          }),
+          correct_answer: decodedCorrectAnswer,
+          incorrect_answers: decodedIncorrectAnswers,
           id: nanoid(),
-          options: shuffleArr([result.correct_answer, ...result.incorrect_answers]),
+          options: shuffleArr([
+            decodedCorrectAnswer,
+            ...decodedIncorrectAnswers
+          ]),
         };
       });
 
@@ -62,10 +68,44 @@ function App() {
   }
 
   function updateSelectedOptions(questionId, optionIndex) {
-    setSelectedOptions((prevState) => [
-      ...prevState,
-      { questionId: questionId, selectedOptionIndex: optionIndex },
-    ]);
+    setSelectedOptions((prevState) => {
+      
+      // Check if the question is already in the selected options
+      const existingSelectionIndex = prevState.findIndex(
+        (option) => option.questionId === questionId
+      );
+
+      // If the question is already selected, update the selected option
+      if (existingSelectionIndex !== -1) {
+        const updatedOptions = [...prevState];
+        updatedOptions[existingSelectionIndex] = {
+          questionId: questionId,
+          selectedOptionIndex: optionIndex
+        };
+        return updatedOptions;
+      }
+
+      return [
+        ...prevState,
+        { questionId: questionId, selectedOptionIndex: optionIndex },
+      ];
+    });
+  }
+
+  function checkUserAnswers() {
+    const results = selectedOptions.map((selectedOption) => {
+      const question = quizData.find(question => question.id === selectedOption.questionId)
+      const isCorrect = question.options[selectedOption.selectedOptionIndex] === question.correct_answer
+      const selectedOptionIndex = selectedOption.optionIndex
+
+      return {
+        questionId: selectedOption.questionId, 
+        selectedOptionIndex: selectedOptionIndex,
+        isCorrect: isCorrect,
+        correctAnswer: question.correct_answer
+      }
+    })
+    setQuizResults(results)
   }
 
   // fetch questions at start of quiz
@@ -82,6 +122,9 @@ function App() {
           onStartBtnClick,
           quizData,
           updateSelectedOptions,
+          selectedOptions,
+          quizResults,
+          checkUserAnswers
         }}
       >
         {quizStarted ? <QuizPage /> : <StartPage />}
@@ -91,7 +134,6 @@ function App() {
 }
 
 export default App;
-
 
 //  HOW DATA IS RETURNED FROM API
 // const quizContent = [

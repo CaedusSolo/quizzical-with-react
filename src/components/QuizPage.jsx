@@ -4,7 +4,7 @@ import QuizItem from './QuizItem'
 
 function QuizPage() {
 
-  const {quizData} = useContext(AppContext)
+  const {quizData, selectedOptions} = useContext(AppContext)
 
 
   function mapQuizData() {
