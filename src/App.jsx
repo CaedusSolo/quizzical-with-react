@@ -108,6 +108,7 @@ function App() {
     setQuizResults(results)
   }
 
+
   // fetch questions at start of quiz
   useEffect(() => {
     if (quizStarted) {

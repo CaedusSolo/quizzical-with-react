@@ -127,9 +127,17 @@ input[type = "radio"] {
   text-align: center;
 }
 
-.check-btn:hover {
+.check-btn:disabled {
+  background-color: grey;
+}
+
+.check-btn.disabled:hover {
+  cursor: auto;
+  border: none;
+}
+
+.check-btn.active:hover {
   cursor: pointer;
   border: 1px solid #560B94;
   background-color: #A34FE8;
 }
-

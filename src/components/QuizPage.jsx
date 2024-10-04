@@ -4,8 +4,11 @@ import QuizItem from './QuizItem'
 
 function QuizPage() {
 
-  const {quizData, selectedOptions} = useContext(AppContext)
+  const {quizData, selectedOptions, checkUserAnswers} = useContext(AppContext)
 
+  function handleClick() {
+    checkUserAnswers()
+  }
 
   function mapQuizData() {
     return quizData.map(item => {
@@ -21,7 +24,10 @@ function QuizPage() {
   return (
     <div className='quizPage'>
       {mapQuizData()}
-      <button className='check-btn'>Check Answers</button>
+      <button className={quizData.length !== selectedOptions.length ? "check-btn disabled" : 'check-btn active'} 
+      onClick={handleClick}
+      disabled={quizData.length !== selectedOptions.length}
+      >Check Answers</button>
     </div>
   )
 }
