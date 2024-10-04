@@ -5,15 +5,13 @@ import QuizPage from "./components/QuizPage";
 import he from "he";
 import { nanoid } from "nanoid";
 
-
 export const AppContext = createContext();
 
 function App() {
   const [quizStarted, setQuizStarted] = useState(false);
   const [quizData, setQuizData] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
-  const [quizResults, setQuizResults] = useState(null)
-  
+  const [quizResults, setQuizResults] = useState(null);
 
   const shuffleArr = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
@@ -39,8 +37,8 @@ function App() {
       const questionsData = await questionsResponse.json();
 
       const decodedQuizContent = questionsData.results.map((result) => {
-        const decodedCorrectAnswer = he.decode(result.correct_answer)
-        const decodedIncorrectAnswers  = result.incorrect_answers.map((item) => {
+        const decodedCorrectAnswer = he.decode(result.correct_answer);
+        const decodedIncorrectAnswers = result.incorrect_answers.map((item) => {
           return he.decode(item);
         });
 
@@ -51,7 +49,7 @@ function App() {
           id: nanoid(),
           options: shuffleArr([
             decodedCorrectAnswer,
-            ...decodedIncorrectAnswers
+            ...decodedIncorrectAnswers,
           ]),
         };
       });
@@ -67,9 +65,15 @@ function App() {
     setQuizStarted((prevState) => !prevState);
   }
 
+  function onPlayAgain() {
+    setQuizStarted(false);
+    setQuizData([]);
+    setSelectedOptions([]);
+    setQuizResults(null);
+  }
+
   function updateSelectedOptions(questionId, optionIndex) {
     setSelectedOptions((prevState) => {
-      
       // Check if the question is already in the selected options
       const existingSelectionIndex = prevState.findIndex(
         (option) => option.questionId === questionId
@@ -80,7 +84,7 @@ function App() {
         const updatedOptions = [...prevState];
         updatedOptions[existingSelectionIndex] = {
           questionId: questionId,
-          selectedOptionIndex: optionIndex
+          selectedOptionIndex: optionIndex,
         };
         return updatedOptions;
       }
@@ -94,20 +98,31 @@ function App() {
 
   function checkUserAnswers() {
     const results = selectedOptions.map((selectedOption) => {
-      const question = quizData.find(question => question.id === selectedOption.questionId)
-      const isCorrect = question.options[selectedOption.selectedOptionIndex] === question.correct_answer
-      const selectedOptionIndex = selectedOption.optionIndex
+      const question = quizData.find(
+        (question) => question.id === selectedOption.questionId
+      );
+      const isCorrect =
+        question.options[selectedOption.selectedOptionIndex] ===
+        question.correct_answer;
+      const selectedOptionIndex = selectedOption.optionIndex;
 
       return {
-        questionId: selectedOption.questionId, 
+        questionId: selectedOption.questionId,
         selectedOptionIndex: selectedOptionIndex,
         isCorrect: isCorrect,
-        correctAnswer: question.correct_answer
-      }
-    })
-    setQuizResults(results)
+        correctAnswer: question.correct_answer,
+      };
+    });
+    setQuizResults(results);
   }
 
+  function getQuizScore() {
+    const score = quizResults.filter((result) => {
+      return result.isCorrect;
+    });
+
+    return score.length;
+  }
 
   // fetch questions at start of quiz
   useEffect(() => {
@@ -115,12 +130,6 @@ function App() {
       fetchQuestions();
     }
   }, [quizStarted]);
-
-  useEffect(() => {
-    if (quizData.length > 0) {
-
-    }
-  })
 
   return (
     <>
@@ -131,7 +140,9 @@ function App() {
           updateSelectedOptions,
           selectedOptions,
           quizResults,
-          checkUserAnswers
+          checkUserAnswers,
+          onPlayAgain,
+          getQuizScore,
         }}
       >
         {quizStarted ? <QuizPage /> : <StartPage />}

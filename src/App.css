@@ -2,7 +2,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif
+  font-family: "Poppins", sans-serif;
+  user-select: none;
 }
 
 #root {
@@ -119,6 +120,7 @@ input[type = "radio"] {
   border-radius: 8px;
   border: none;
   background-color: #8326CE;
+  border: 1px solid #8326CE;
   font-weight: 500;
   color: gainsboro;
   letter-spacing: 1.1px;
@@ -139,4 +141,47 @@ input[type = "radio"] {
   cursor: pointer;
   border: 1px solid #560B94;
   background-color: #A34FE8;
+}
+
+.quizResultsSummary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2em;
+}
+
+@media screen and (min-width: 600px) {
+  .quizPage {
+    gap: 2em;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .quizItem--question {
+    font-size: 1.1rem;
+  }
+  .radio {
+    font-size: 0.95rem;
+  }
+  .quizPage {
+    padding: 1em 0.75em;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  .quizPage {
+    gap: 2.25em;
+  }
+  .quizItem--question {
+    font-size: 1.2rem;
+  }
+  .radio {
+    font-size: 1rem;
+  }
+  .start-btn {
+    font-size: 1rem;
+  }
+  .quizPage {
+    padding: 1em 0.75em;
+  }
 }

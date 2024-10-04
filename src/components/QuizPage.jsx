@@ -3,7 +3,7 @@ import { AppContext } from "../App";
 import QuizItem from "./QuizItem";
 
 function QuizPage() {
-  const { quizData, selectedOptions, checkUserAnswers, quizResults } =
+  const { quizData, selectedOptions, checkUserAnswers, quizResults, onPlayAgain, getQuizScore } =
     useContext(AppContext);
 
   const [isQuizRendered, setIsQuizRendered] = useState(false)
@@ -32,7 +32,11 @@ function QuizPage() {
       {mapQuizData()}
       {quizResults ? (
         <div className="quizResultsSummary">
-          <button className="check-btn active">Play Again</button>
+          <h3>Your score was: {getQuizScore()}/5</h3>
+          <button 
+          className="check-btn active start-btn"
+          onClick={onPlayAgain}
+          >Play Again</button>
         </div>
       ) : 
       isQuizRendered &&

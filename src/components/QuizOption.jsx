@@ -25,7 +25,7 @@ function QuizOption(props) {
 
       if (isSelected) {
         return {
-          backgroundColor: quizResult.isCorrect ? "green" : "red",
+          backgroundColor: quizResult.isCorrect ? "#94D7A2" : "#F8BCBC",
           fontWeight: "bold",
           color: "white"
         }
@@ -33,7 +33,7 @@ function QuizOption(props) {
 
       if (isCorrectAnswer) {
         return {
-          backgroundColor: "green",
+          backgroundColor: "#94D7A2",
           fontWeight: "bold",
           color: "white"
         }
