@@ -13,7 +13,7 @@ function App() {
   const [quizData, setQuizData] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [quizResults, setQuizResults] = useState(null)
-
+  
 
   const shuffleArr = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
@@ -115,6 +115,12 @@ function App() {
       fetchQuestions();
     }
   }, [quizStarted]);
+
+  useEffect(() => {
+    if (quizData.length > 0) {
+
+    }
+  })
 
   return (
     <>

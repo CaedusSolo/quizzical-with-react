@@ -102,7 +102,6 @@ input[type = "radio"] {
 
 .radio:hover {
   background-color: #9968CB;
-  font-weight: bold;
 }
 
 .radio label {

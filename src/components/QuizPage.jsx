@@ -1,35 +1,56 @@
-import React, {useContext} from 'react'
-import { AppContext } from '../App'
-import QuizItem from './QuizItem'
+import React, { useContext, useEffect, useState } from "react";
+import { AppContext } from "../App";
+import QuizItem from "./QuizItem";
 
 function QuizPage() {
+  const { quizData, selectedOptions, checkUserAnswers, quizResults } =
+    useContext(AppContext);
 
-  const {quizData, selectedOptions, checkUserAnswers} = useContext(AppContext)
+  const [isQuizRendered, setIsQuizRendered] = useState(false)
 
-  function handleClick() {
-    checkUserAnswers()
-  }
+  useEffect(() => {
+    if (quizData.length === 5) {
+      setIsQuizRendered(true)
+    }
+  },[quizData])
 
   function mapQuizData() {
-    return quizData.map(item => {
-      return <QuizItem 
-      question={item.question}
-      answer={item.correct_answer}
-      options={item.options}
-      id={item.id}
-      />
-    })
+    return quizData.map((item) => {
+      return (
+        <QuizItem
+          question={item.question}
+          answer={item.correct_answer}
+          options={item.options}
+          id={item.id}
+        />
+      );
+    });
   }
 
   return (
-    <div className='quizPage'>
+    <div className="quizPage">
       {mapQuizData()}
-      <button className={quizData.length !== selectedOptions.length ? "check-btn disabled" : 'check-btn active'} 
-      onClick={handleClick}
-      disabled={quizData.length !== selectedOptions.length}
-      >Check Answers</button>
+      {quizResults ? (
+        <div className="quizResultsSummary">
+          <button className="check-btn active">Play Again</button>
+        </div>
+      ) : 
+      isQuizRendered &&
+      (
+        <button
+          className={
+            quizData.length !== selectedOptions.length
+              ? "check-btn disabled"
+              : "check-btn active"
+          }
+          onClick={checkUserAnswers}
+          disabled={quizData.length !== selectedOptions.length}
+        >
+          Check Answers
+        </button>
+      )}
     </div>
-  )
+  );
 }
 
-export default QuizPage
+export default QuizPage;
